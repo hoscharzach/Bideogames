@@ -35,7 +35,9 @@ export default function RandomStuff(props) {
     return (
         <FlexContainer col>
             <h1>Random Stuff...</h1>
-            <MagicEightBall />
+            <MagicEightBall>
+                <div style={{ position: 'absolute', color: 'black', top: '48%', left: '40%', zIndex: '5', fontSize: '10rem' }}>8</div>
+            </MagicEightBall>
             <ChatBox answer={answer} />
             <FlexContainer margin="1" gap>
                 <Button onClick={handleClick}>Magic Eight Ball</Button>
