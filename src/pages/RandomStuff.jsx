@@ -7,6 +7,7 @@ import { Button } from '../components/StyledComponents/Button'
 import { CatImage } from "../components/StyledComponents/CatImage"
 import { FlexContainer } from "../components/StyledComponents/FlexContainer"
 import { ImageContainer } from "../components/StyledComponents/ImageContainer"
+import { MagicEightBall } from "../components/StyledComponents/MagicEightBall"
 
 export default function RandomStuff(props) {
     const [cats, setCats] = useState([])
@@ -34,6 +35,7 @@ export default function RandomStuff(props) {
     return (
         <FlexContainer col>
             <h1>Random Stuff...</h1>
+            <MagicEightBall />
             <ChatBox answer={answer} />
             <FlexContainer margin="1" gap>
                 <Button onClick={handleClick}>Magic Eight Ball</Button>
