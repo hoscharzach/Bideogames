@@ -8,7 +8,7 @@ export const AuthContextProvider = ({ children }) => {
 
     const [user, setUser] = useState({})
 
-    const getAnswer = async () => {
+    const getRandomAnswer = async () => {
         const response = await fetch('https://golang-test.onrender.com/random')
         if (response.ok) {
             const data = await response.json()
@@ -37,7 +37,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ googleSignIn, user, logOut, getAnswer }}>
+        <AuthContext.Provider value={{ googleSignIn, user, logOut, getRandomAnswer }}>
             {children}
         </AuthContext.Provider>
     )

@@ -10,13 +10,13 @@ function App() {
   const [cats, setCats] = useState([])
   const [answer, setAnswer] = useState('')
 
-  const { user, getAnswer } = UserAuth()
+  const { getRandomAnswer, user } = UserAuth()
 
   const handleClick = async () => {
-    const answer = await getAnswer()
+    const answer = await getRandomAnswer()
     setAnswer(answer)
   }
-
+  //asdfsdfasdfsd
 
   async function getCats() {
     const CAT_API = 'live_gSfrFvjdVslqjvRmMwfqzd8MsXa1xfnvw5JbIdnGl7u3GSWxUjpVfWgwMkAEmsr0'
@@ -30,7 +30,7 @@ function App() {
   return (
     <>
       <div className="App">
-        {user && <ChatBox answer={answer} />}
+        {user?.displayName && <ChatBox answer={answer} />}
         <button onClick={handleClick}>Magic Eight Ball</button>
 
         {user?.displayName ? <LogOutButton /> : <Signin />}
