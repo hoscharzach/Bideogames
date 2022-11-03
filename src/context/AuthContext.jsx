@@ -6,7 +6,7 @@ const AuthContext = createContext()
 
 export const AuthContextProvider = ({ children }) => {
 
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(null)
 
     const getRandomAnswer = async () => {
         const response = await fetch('https://golang-test.onrender.com/random', {
