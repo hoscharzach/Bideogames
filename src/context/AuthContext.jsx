@@ -6,7 +6,15 @@ const AuthContext = createContext()
 
 export const AuthContextProvider = ({ children }) => {
 
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState({})
+
+    const getAnswer = async () => {
+        const response = await fetch('https://golang-test.onrender.com/random')
+        if (response.ok) {
+            const data = await response.json()
+            return data.response
+        }
+    }
 
     /// alskdjfklasdf
     const googleSignIn = () => {
@@ -29,7 +37,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ googleSignIn, user, logOut }}>
+        <AuthContext.Provider value={{ googleSignIn, user, logOut, getAnswer }}>
             {children}
         </AuthContext.Provider>
     )

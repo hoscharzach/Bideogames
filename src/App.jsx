@@ -8,25 +8,30 @@ import { UserAuth } from './context/AuthContext'
 
 function App() {
   const [cats, setCats] = useState([])
+  const [answer, setAnswer] = useState('')
 
-  // console.log(UserAuth())
-  const { user } = UserAuth()
-  console.log(user)
+  const { user, getAnswer } = UserAuth()
+
+  const handleClick = async () => {
+    const answer = await getAnswer()
+    setAnswer(answer)
+  }
+
 
   async function getCats() {
     const CAT_API = 'live_gSfrFvjdVslqjvRmMwfqzd8MsXa1xfnvw5JbIdnGl7u3GSWxUjpVfWgwMkAEmsr0'
     const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=2&breed_ids=beng&api_key=${CAT_API}`)
     if (res.ok) {
       const catArray = await res.json()
-      console.log(catArray)
       setCats(catArray)
     }
   }
-  // aslkjfskldfd
+
   return (
     <>
       <div className="App">
-        {user && <ChatBox />}
+        {user && <ChatBox answer={answer} />}
+        <button onClick={handleClick}>Magic Eight Ball</button>
 
         {user?.displayName ? <LogOutButton /> : <Signin />}
       </div>
