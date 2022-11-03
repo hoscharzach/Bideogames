@@ -1,8 +1,10 @@
+import { FlexContainer } from "./StyledComponents/FlexContainer";
+
 export default function ChatBox({ answer }) {
 
     return (
-        <div style={{ color: 'black', marginBottom: '2rem', height: '500px', width: '500px', backgroundColor: 'lightgrey', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <FlexContainer col>
             <h1>{answer}</h1>
-        </div>
+        </FlexContainer>
     )
 }

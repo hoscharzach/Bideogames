@@ -1,4 +1,5 @@
 import { UserAuth } from "../context/AuthContext";
+import { Button } from "./StyledComponents/Button";
 
 export default function LogOutButton() {
 
@@ -13,6 +14,6 @@ export default function LogOutButton() {
     }
 
     return (
-        <button onClick={handleLogOut}>Logout</button>
+        <Button inverted onClick={handleLogOut} >Logout</Button>
     )
 }

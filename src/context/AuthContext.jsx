@@ -9,14 +9,15 @@ export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState({})
 
     const getRandomAnswer = async () => {
-        const response = await fetch('https://golang-test.onrender.com/random')
+        const response = await fetch('https://golang-test.onrender.com/random', {
+
+        })
         if (response.ok) {
             const data = await response.json()
             return data.response
         }
     }
 
-    /// alskdjfklasdf
     const googleSignIn = () => {
         const provider = new GoogleAuthProvider()
         signInWithRedirect(auth, provider)
