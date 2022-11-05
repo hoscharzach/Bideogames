@@ -13,6 +13,29 @@ import { ChatMessages, ChatInput, Message } from "../components/StyledComponents
 
 export default function RandomStuff(props) {
 
+
+    // establish connection variable
+    let conn
+
+    function handleWS() {
+
+        if (window["WebSocket"]) {
+            const conn = new WebSocket(`wss://golang-test.onrender.com/ws/2`)
+            console.log(conn)
+            conn.onclose = (e) => {
+                setConnectionStatus('Connection closed')
+                setMessages(prev => [...prev, 'Connection Closed'])
+            }
+
+            conn.onmessage = (e) => {
+                let messages = e.data.split('\n')
+                console.log(messages)
+            }
+        } else {
+            console.log("Your browser does not support websockets")
+        }
+    }
+
     // if (window["WebSocket"]) {
     //     const params = window.location.href.split("/");
     //     const roomId = params[params.length - 1];
@@ -46,6 +69,8 @@ export default function RandomStuff(props) {
     const [catsLoading, setCatsLoading] = useState(false)
     const [messages, setMessages] = useState([])
     const [message, setMessage] = useState('')
+    const [roomId, setRoomId] = useState(1)
+    const [connectionStatus, setConnectionStatus] = useState('Not Connected')
 
     const { getRandomAnswer, user } = UserAuth()
 
@@ -83,6 +108,8 @@ export default function RandomStuff(props) {
             <FlexContainer margin="1" gap="1" col>
                 <Button onClick={handleClick}>Magic Eight Ball</Button>
 
+
+                {/* Firebase auth test */}
                 {user !== null ?
                     <FlexContainer col gap>
                         <div>Welcome, {user.displayName}</div>
@@ -97,22 +124,27 @@ export default function RandomStuff(props) {
 
             {/* Extract to Chat Component once sockets are up */}
             <FlexContainer w="full" col gap="2" margin="1">
+                <h1>{connectionStatus}</h1>
                 <h1>Chat Room</h1>
+                <Button onClick={handleWS}>Join Room</Button>
                 <ChatMessages height="30">
-                    {messages.map(msg => (
-                        <Message>{msg}</Message>
+                    {messages.map((msg, i) => (
+                        <Message key={i}>{msg}</Message>
                     ))}
                 </ChatMessages>
                 <FlexContainer>
-
                     <form onSubmit={submitChat}>
                         <FlexContainer gap w="500">
                             <ChatInput type="text" onChange={(e) => setMessage(e.target.value)} value={message} />
                             <Button disabled={user === null} type="submit">{user === null ? "Log in" : "Send"}</Button>
                         </FlexContainer>
                     </form>
+
                 </FlexContainer>
             </FlexContainer>
+
+            {/* Cat API test fetch */}
+
             {/* <ImageContainer>
                 {cats.length > 0 && cats.map((cat, i) => <CatImage key={i} src={cat.url}></CatImage>)}
             </ImageContainer> */}
