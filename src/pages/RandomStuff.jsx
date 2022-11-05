@@ -20,7 +20,7 @@ export default function RandomStuff(props) {
     function handleWS() {
 
         if (window["WebSocket"]) {
-            const conn = new WebSocket(`wss://golang-test.onrender.com/ws/2`)
+            const conn = new WebSocket(`ws://localhost:5000/ws/2`)
             console.log(conn)
             conn.onclose = (e) => {
                 setConnectionStatus('Connection closed')
