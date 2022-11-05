@@ -7,7 +7,6 @@ export const Button = styled.button`
   }
   cursor: pointer;
 }
-flex-grow: 1;
 border-radius: 8px;
 border: 1px solid transparent;
 padding: 0.6em 1.2em;

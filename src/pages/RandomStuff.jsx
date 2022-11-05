@@ -15,12 +15,12 @@ export default function RandomStuff(props) {
 
 
     // establish connection variable
-    let conn
 
     function handleWS() {
+        let conn
 
         if (window["WebSocket"]) {
-            const conn = new WebSocket(`ws://localhost:5000/ws/2`)
+            conn = new WebSocket(`ws://localhost:5000/ws/2`)
             console.log(conn)
             conn.onclose = (e) => {
                 setConnectionStatus('Connection closed')
@@ -58,12 +58,6 @@ export default function RandomStuff(props) {
     //     item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
     //     appendLog(item);
     // }
-
-    // let url = "wss://localhost:5000/ws/"
-    // const url = 'wss://localhost:5000/ws'
-    // const c = new WebSocket(url)
-
-    // console.log(c)
     const [cats, setCats] = useState([])
     const [answer, setAnswer] = useState('')
     const [catsLoading, setCatsLoading] = useState(false)
