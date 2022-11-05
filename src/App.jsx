@@ -1,12 +1,10 @@
 
-
-import './App.css'
-import { FlexContainer } from './components/StyledComponents/FlexContainer'
+import { NavBar } from './components/StyledComponents/NavBar'
 
 function App() {
 
   return (
-    <FlexContainer />
+    <NavBar />
   )
 }
 
