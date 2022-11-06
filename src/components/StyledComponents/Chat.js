@@ -17,6 +17,7 @@ ${props => props.width && css`
 width: ${props.width}rem`}
 `
 export const ChatInput = styled.input`
+outline: none;
 background-color: #40444b;
 border-radius: 8px;
 padding: 0.6em 1.2em;

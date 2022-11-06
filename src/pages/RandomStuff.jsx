@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { UserAuth } from "../context/AuthContext"
 import Signin from '../components/Signin'
 import ChatBox from '../components/ChatBox'
@@ -9,71 +9,60 @@ import { FlexContainer } from "../components/StyledComponents/FlexContainer"
 import { ImageContainer } from "../components/StyledComponents/ImageContainer"
 import { MagicEightBall } from "../components/StyledComponents/MagicEightBall"
 import { ChatMessages, ChatInput, Message } from "../components/StyledComponents/Chat"
+import { nanoid } from "nanoid"
 
 
 export default function RandomStuff(props) {
 
+    const { getRandomAnswer, user } = UserAuth()
 
-    // establish connection variable
+    const chatInput = useRef(null)
 
-    function handleWS() {
-        let conn
-
-        if (window["WebSocket"]) {
-            conn = new WebSocket(`ws://localhost:5000/ws/2`)
-            console.log(conn)
-            conn.onclose = (e) => {
-                setConnectionStatus('Connection closed')
-                setMessages(prev => [...prev, 'Connection Closed'])
-            }
-
-            conn.onmessage = (e) => {
-                let messages = e.data.split('\n')
-                console.log(messages)
-            }
-        } else {
-            console.log("Your browser does not support websockets")
-        }
-    }
-
-    // if (window["WebSocket"]) {
-    //     const params = window.location.href.split("/");
-    //     const roomId = params[params.length - 1];
-    //     conn = new WebSocket("wss://" + document.location.host + "/ws/" + roomId);
-    //     conn.onclose = function (evt) {
-    //         let item = document.createElement("div");
-    //         item.innerHTML = "<b>Connection closed.</b>";
-    //         appendLog(item);
-    //     };
-    //     conn.onmessage = function (evt) {
-    //         let messages = evt.data.split('\n');
-    //         for (let i = 0; i < messages.length; i++) {
-    //             let item = document.createElement("div");
-    //             item.innerText = messages[i];
-    //             appendLog(item);
-    //         }
-    //     };
-    // } else {
-    //     let item = document.createElement("div");
-    //     item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
-    //     appendLog(item);
-    // }
     const [cats, setCats] = useState([])
     const [answer, setAnswer] = useState('')
     const [catsLoading, setCatsLoading] = useState(false)
     const [messages, setMessages] = useState([])
     const [message, setMessage] = useState('')
-    const [roomId, setRoomId] = useState(1)
+    const [roomId, setRoomId] = useState(null)
     const [connectionStatus, setConnectionStatus] = useState('Not Connected')
+    const [conn, setConn] = useState(null)
 
-    const { getRandomAnswer, user } = UserAuth()
+    const dev = import.meta.env.DEV === true
 
-    const handleClick = async () => {
+
+    function handleWS() {
+        if (window["WebSocket"]) {
+            try {
+                setConn(new WebSocket(dev ? 'ws://localhost:5000/ws/2' : 'ws://golang-test.onrender.com/ws/2'))
+            } catch (e) {
+                console.log(e, "Error establishing websocket")
+            }
+        } else {
+            console.log("Your browser does not support websockets")
+        }
+
+        setRoomId('2')
+    }
+
+    useEffect(() => {
+        if (conn) {
+            conn.onclose = (e) => {
+                setConnectionStatus('Connection closed')
+                setMessages(prev => [...prev, 'Connection Closed'])
+                setRoomId(null)
+            }
+            conn.onmessage = (e) => {
+                let newMessage = e.data
+                setMessages(prev => [...prev, newMessage])
+            }
+        }
+    }, [conn])
+
+    const fetchRandomAnswer = async () => {
         setAnswer("Hm...")
         const answer = await getRandomAnswer()
         setAnswer(answer)
     }
-
 
     async function getCats() {
         const CAT_API = 'live_gSfrFvjdVslqjvRmMwfqzd8MsXa1xfnvw5JbIdnGl7u3GSWxUjpVfWgwMkAEmsr0'
@@ -88,8 +77,10 @@ export default function RandomStuff(props) {
 
     const submitChat = (e) => {
         e.preventDefault()
-        setMessages(prev => [...messages, message])
-        setMessage('')
+
+        if (!chatInput.current || !chatInput.current.value || !conn) return
+
+        conn.send(chatInput.current.value)
     }
 
     return (
@@ -100,7 +91,7 @@ export default function RandomStuff(props) {
             </MagicEightBall>
             <ChatBox answer={answer} />
             <FlexContainer margin="1" gap="1" col>
-                <Button onClick={handleClick}>Magic Eight Ball</Button>
+                <Button onClick={fetchRandomAnswer}>Magic Eight Ball</Button>
 
 
                 {/* Firebase auth test */}
@@ -121,15 +112,16 @@ export default function RandomStuff(props) {
                 <h1>{connectionStatus}</h1>
                 <h1>Chat Room</h1>
                 <Button onClick={handleWS}>Join Room</Button>
+                <div>Currently chatting in room: {roomId}</div>
                 <ChatMessages height="30">
                     {messages.map((msg, i) => (
-                        <Message key={i}>{msg}</Message>
+                        <Message key={nanoid()}>{msg}</Message>
                     ))}
                 </ChatMessages>
                 <FlexContainer>
                     <form onSubmit={submitChat}>
                         <FlexContainer gap w="500">
-                            <ChatInput type="text" onChange={(e) => setMessage(e.target.value)} value={message} />
+                            <ChatInput ref={chatInput} type="text" />
                             <Button disabled={user === null} type="submit">{user === null ? "Log in" : "Send"}</Button>
                         </FlexContainer>
                     </form>
