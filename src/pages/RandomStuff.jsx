@@ -33,7 +33,7 @@ export default function RandomStuff(props) {
     function handleWS() {
         if (window["WebSocket"]) {
             try {
-                setConn(new WebSocket(dev ? 'ws://localhost:5000/ws/2' : 'ws://golang-test.onrender.com/ws/2'))
+                setConn(new WebSocket(dev ? 'ws://localhost:5000/ws/2' : 'wss://golang-test.onrender.com/ws/2'))
             } catch (e) {
                 console.log(e, "Error establishing websocket")
             }
